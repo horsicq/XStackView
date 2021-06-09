@@ -64,7 +64,7 @@ private:
     qint32 g_nBytesProLine;
     OPTIONS g_options;
     QByteArray g_baDataBuffer;
-    QByteArray g_baDataHexBuffer;
+    QList<QString> g_listValues;
     QList<QString> g_listAddresses;
     qint32 g_nAddressWidth;
     qint32 g_nDataBlockSize;

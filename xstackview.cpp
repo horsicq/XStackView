@@ -108,7 +108,7 @@ void XStackView::updateData()
     {
         // Update cursor position
         qint64 nBlockOffset=getViewStart();
-        qint64 nCursorOffset=nBlockOffset+getCursorDelta();
+        qint64 nCursorOffset=nBlockOffset;
 
         if(nCursorOffset>=getDataSize())
         {
@@ -118,6 +118,7 @@ void XStackView::updateData()
         setCursorOffset(nCursorOffset);
 
         g_listAddresses.clear();
+        g_listValues.clear();
 
         qint32 nDataBlockSize=g_nBytesProLine*getLinesProPage();
 
@@ -125,21 +126,25 @@ void XStackView::updateData()
 
         g_nDataBlockSize=g_baDataBuffer.size();
 
+        XBinary::MODE mode=XBinary::getWidthModeFromByteSize(g_nAddressWidth);
+
         if(g_nDataBlockSize)
         {
-            g_baDataHexBuffer=QByteArray(g_baDataBuffer.toHex());
+            char *pData=g_baDataBuffer.data();
 
             for(int i=0;i<g_nDataBlockSize;i+=g_nBytesProLine)
             {
-                QString sAddress=QString("%1").arg(i+g_options.nStartAddress+nBlockOffset,g_nAddressWidth,16,QChar('0'));
+                QString sAddress=XBinary::valueToHex(mode,i+g_options.nStartAddress+nBlockOffset);
+                QString sValue=XBinary::valueToHex(mode,XBinary::_read_value(mode,pData+i));
 
                 g_listAddresses.append(sAddress);
+                g_listValues.append(sValue);
             }
         }
         else
         {
             g_baDataBuffer.clear();
-            g_baDataHexBuffer.clear();
+            g_listValues.clear();
         }
     }
 }
@@ -151,6 +156,13 @@ void XStackView::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint
         if(nRow<g_listAddresses.count())
         {
             pPainter->drawText(nLeft+getCharWidth(),nTop+nHeight,g_listAddresses.at(nRow)); // TODO Text Optional
+        }
+    }
+    else if(nColumn==COLUMN_VALUE)
+    {
+        if(nRow<g_listValues.count())
+        {
+            pPainter->drawText(nLeft+getCharWidth(),nTop+nHeight,g_listValues.at(nRow)); // TODO Text Optional
         }
     }
 }
