@@ -146,6 +146,8 @@ void XStackView::updateData()
             g_baDataBuffer.clear();
             g_listValues.clear();
         }
+
+        setCurrentBlock(nBlockOffset,g_nDataBlockSize);
     }
 }
 
