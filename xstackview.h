@@ -32,7 +32,6 @@ public:
     {
         qint64 nStartAddress;
         qint64 nCurrentAddress;
-        QString sSignaturesPath;
     };
 
     explicit XStackView(QWidget *pParent=nullptr);
