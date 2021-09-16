@@ -21,9 +21,14 @@
 #include "xstackview.h"
 
 XStackView::XStackView(QWidget *pParent) : XDeviceTableView(pParent)
-{
-    g_nBytesProLine=4; // TODO 64
+{  
+#ifndef Q_OS_WIN64
+    g_nBytesProLine=4;
     g_nAddressWidth=8;
+#else
+    g_nBytesProLine=8;
+    g_nAddressWidth=12;
+#endif
 
     addColumn(tr("Address"));
     addColumn(tr("Value"));
