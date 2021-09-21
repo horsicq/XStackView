@@ -27,7 +27,7 @@ XStackView::XStackView(QWidget *pParent) : XDeviceTableView(pParent)
     g_nAddressWidth=8;
 #else
     g_nBytesProLine=8;
-    g_nAddressWidth=12;
+    g_nAddressWidth=16;
 #endif
 
     addColumn(tr("Address"));
@@ -239,8 +239,13 @@ void XStackView::adjustColumns()
 {
     const QFontMetricsF fm(getTextFont());
 
-    setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("00000000").width()); // TODO 64
-    setColumnWidth(COLUMN_VALUE,2*getCharWidth()+fm.boundingRect("00000000").width()); // TODO 64
+#ifndef Q_OS_WIN64
+    setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("00000000").width());
+    setColumnWidth(COLUMN_VALUE,2*getCharWidth()+fm.boundingRect("00000000").width());
+#else
+    setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("0000000000000000").width());
+    setColumnWidth(COLUMN_VALUE,2*getCharWidth()+fm.boundingRect("0000000000000000").width());
+#endif
 }
 
 void XStackView::registerShortcuts(bool bState)
