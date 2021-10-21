@@ -136,7 +136,7 @@ void XStackView::updateData()
         {
             char *pData=g_baDataBuffer.data();
 
-            for(int i=0;i<g_nDataBlockSize;i+=g_nBytesProLine)
+            for(qint32 i=0;i<g_nDataBlockSize;i+=g_nBytesProLine)
             {
                 QString sAddress=XBinary::valueToHex(mode,i+g_options.nStartAddress+nBlockOffset);
                 QString sValue=XBinary::valueToHex(mode,XBinary::_read_value(mode,pData+i));
