@@ -138,7 +138,7 @@ void XStackView::updateData()
 
             for(qint32 i=0;i<g_nDataBlockSize;i+=g_nBytesProLine)
             {
-                QString sAddress=XBinary::valueToHex(mode,i+g_options.nStartAddress+nBlockOffset);
+                QString sAddress=XBinary::valueToHexColon(mode,i+g_options.nStartAddress+nBlockOffset);
                 QString sValue=XBinary::valueToHex(mode,XBinary::_read_value(mode,pData+i));
 
                 g_listAddresses.append(sAddress);
@@ -243,8 +243,8 @@ void XStackView::adjustColumns()
     setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("00000000").width());
     setColumnWidth(COLUMN_VALUE,2*getCharWidth()+fm.boundingRect("00000000").width());
 #else
-    setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("0000000000000000").width());
-    setColumnWidth(COLUMN_VALUE,2*getCharWidth()+fm.boundingRect("0000000000000000").width());
+    setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("00000000:00000000").width());
+    setColumnWidth(COLUMN_VALUE,2*getCharWidth()+fm.boundingRect("00000000:00000000").width());
 #endif
 }
 
