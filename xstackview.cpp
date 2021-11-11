@@ -177,12 +177,13 @@ void XStackView::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint
 
 void XStackView::contextMenu(const QPoint &pos)
 {
+    Q_UNUSED(pos)
     // TODO
 }
 
 void XStackView::keyPressEvent(QKeyEvent *pEvent)
 {
-
+    Q_UNUSED(pEvent)
 }
 
 qint64 XStackView::getScrollValue()
