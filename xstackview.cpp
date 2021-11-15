@@ -22,13 +22,16 @@
 
 XStackView::XStackView(QWidget *pParent) : XDeviceTableView(pParent)
 {  
-#ifndef Q_OS_WIN64
-    g_nBytesProLine=4;
-    g_nAddressWidth=8;
-#else
-    g_nBytesProLine=8;
-    g_nAddressWidth=16;
-#endif
+    if(sizeof(void *)==8)
+    {
+        g_nBytesProLine=8;
+        g_nAddressWidth=16;
+    }
+    else
+    {
+        g_nBytesProLine=4;
+        g_nAddressWidth=8;
+    }
 
     addColumn(tr("Address"));
     addColumn(tr("Value"));
@@ -143,6 +146,9 @@ void XStackView::updateData()
 
                 g_listAddresses.append(sAddress);
                 g_listValues.append(sValue);
+
+                // TODO Comments
+                // TODO Breakpoints
             }
         }
         else
@@ -242,13 +248,16 @@ void XStackView::adjustColumns()
 {
     const QFontMetricsF fm(getTextFont());
 
-#ifndef Q_OS_WIN64
-    setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("00000000").width());
-    setColumnWidth(COLUMN_VALUE,2*getCharWidth()+fm.boundingRect("00000000").width());
-#else
-    setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("00000000:00000000").width());
-    setColumnWidth(COLUMN_VALUE,2*getCharWidth()+fm.boundingRect("00000000:00000000").width());
-#endif
+    if(sizeof(void *)==8)
+    {
+        setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("00000000:00000000").width());
+        setColumnWidth(COLUMN_VALUE,2*getCharWidth()+fm.boundingRect("00000000:00000000").width());
+    }
+    else
+    {
+        setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("00000000").width());
+        setColumnWidth(COLUMN_VALUE,2*getCharWidth()+fm.boundingRect("00000000").width());
+    }
 }
 
 void XStackView::registerShortcuts(bool bState)
