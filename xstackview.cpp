@@ -248,6 +248,7 @@ void XStackView::adjustColumns()
 {
     const QFontMetricsF fm(getTextFont());
 
+    // TODO option
     if(sizeof(void *)==8)
     {
         setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("00000000:00000000").width());
@@ -255,8 +256,8 @@ void XStackView::adjustColumns()
     }
     else
     {
-        setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("00000000").width());
-        setColumnWidth(COLUMN_VALUE,2*getCharWidth()+fm.boundingRect("00000000").width());
+        setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("0000:0000").width());
+        setColumnWidth(COLUMN_VALUE,2*getCharWidth()+fm.boundingRect("0000:0000").width());
     }
 }
 
