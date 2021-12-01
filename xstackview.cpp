@@ -37,7 +37,7 @@ XStackView::XStackView(QWidget *pParent) : XDeviceTableView(pParent)
     addColumn(tr("Value"));
     addColumn(tr("Comment"));
 
-    setLastColumnScretch(true);
+    setLastColumnStretch(true);
 
     setTextFont(getMonoFont(10));
 }

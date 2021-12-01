@@ -23,6 +23,8 @@
 
 #include "xdevicetableview.h"
 
+// TODO header clickable Address -> Offset -> ESP ->EBP
+
 class XStackView : public XDeviceTableView
 {
     Q_OBJECT
