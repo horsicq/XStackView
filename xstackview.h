@@ -24,6 +24,7 @@
 #include "xdevicetableview.h"
 
 // TODO header clickable Address -> Offset -> ESP ->EBP
+// TODO show comments
 
 class XStackView : public XDeviceTableView
 {
