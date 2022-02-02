@@ -33,7 +33,7 @@ XStackView::XStackView(QWidget *pParent) : XDeviceTableView(pParent)
         g_nAddressWidth=8;
     }
 
-    addColumn(tr("Address"));
+    addColumn(tr("Address"),0,true);
     addColumn(tr("Value"));
     addColumn(tr("Comment"));
 
@@ -124,7 +124,7 @@ void XStackView::updateData()
 
         setCursorOffset(nCursorOffset);
 
-        g_listAddresses.clear();
+        g_listRecords.clear();
         g_listValues.clear();
 
         qint32 nDataBlockSize=g_nBytesProLine*getLinesProPage();
@@ -141,10 +141,25 @@ void XStackView::updateData()
 
             for(qint32 i=0;i<g_nDataBlockSize;i+=g_nBytesProLine)
             {
-                QString sAddress=XBinary::valueToHexColon(mode,i+g_options.nStartAddress+nBlockOffset);
+                RECORD record={};
+                record.nAddress=i+g_options.nStartAddress+nBlockOffset;
+
+                qint64 nCurrentAddress=0;
+
+                if(getAddressMode()==MODE_ADDRESS)
+                {
+                    nCurrentAddress=record.nAddress;
+                }
+                else if(getAddressMode()==MODE_OFFSET)
+                {
+                    nCurrentAddress=i+nBlockOffset;
+                }
+
+                record.sAddress=XBinary::valueToHexColon(mode,nCurrentAddress);
+
                 QString sValue=XBinary::valueToHex(mode,XBinary::_read_value(mode,pData+i));
 
-                g_listAddresses.append(sAddress);
+                g_listRecords.append(record);
                 g_listValues.append(sValue);
 
                 // TODO Comments
@@ -167,9 +182,9 @@ void XStackView::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint
 
     if(nColumn==COLUMN_ADDRESS)
     {
-        if(nRow<g_listAddresses.count())
+        if(nRow<g_listRecords.count())
         {
-            pPainter->drawText(nLeft+getCharWidth(),nTop+nHeight,g_listAddresses.at(nRow)); // TODO Text Optional
+            pPainter->drawText(nLeft+getCharWidth(),nTop+nHeight,g_listRecords.at(nRow).sAddress); // TODO Text Optional
         }
     }
     else if(nColumn==COLUMN_VALUE)
@@ -264,4 +279,28 @@ void XStackView::adjustColumns()
 void XStackView::registerShortcuts(bool bState)
 {
     Q_UNUSED(bState)
+}
+
+void XStackView::_headerClicked(qint32 nColumn)
+{
+    if(nColumn==COLUMN_ADDRESS)
+    {
+        if(getAddressMode()==MODE_ADDRESS)
+        {
+            setColumnTitle(COLUMN_ADDRESS,tr("Offset"));
+            setAddressMode(MODE_OFFSET);
+        }
+        else if(getAddressMode()==MODE_OFFSET)
+        {
+            setColumnTitle(COLUMN_ADDRESS,tr("Address"));
+            setAddressMode(MODE_ADDRESS);
+        }
+
+        adjust(true);
+    }
+}
+
+void XStackView::_cellDoubleClicked(qint32 nRow, qint32 nColumn)
+{
+    // TODO
 }
