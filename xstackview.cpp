@@ -302,5 +302,7 @@ void XStackView::_headerClicked(qint32 nColumn)
 
 void XStackView::_cellDoubleClicked(qint32 nRow,qint32 nColumn)
 {
+    Q_UNUSED(nRow)
+    Q_UNUSED(nColumn)
     // TODO
 }
