@@ -339,3 +339,10 @@ void XStackView::_cellDoubleClicked(qint32 nRow,qint32 nColumn)
     Q_UNUSED(nColumn)
     // TODO
 }
+
+qint64 XStackView::getRecordSize(qint64 nOffset)
+{
+    Q_UNUSED(nOffset)
+
+    return g_nBytesProLine;
+}
