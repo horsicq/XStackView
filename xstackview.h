@@ -53,9 +53,18 @@ private:
 
     struct RECORD
     {
+        qint64 nOffset;
         QString sAddress;
         qint64 nAddress;
+        QString sValue;
     };
+
+    struct TEXT_OPTION
+    {
+        bool bSelected;
+    };
+
+    void drawText(QPainter *pPainter,qint32 nLeft,qint32 nTop,qint32 nWidth,qint32 nHeight,QString sText,TEXT_OPTION *pTextOption);
 
 protected:
     virtual OS cursorPositionToOS(CURSOR_POSITION cursorPosition);
@@ -75,7 +84,6 @@ private:
     OPTIONS g_options;
     QByteArray g_baDataBuffer;
     QList<RECORD> g_listRecords;
-    QList<QString> g_listValues;
     qint32 g_nAddressWidth;
     qint32 g_nDataBlockSize;
 };

@@ -92,21 +92,50 @@ void XStackView::setSelectionAddress(qint64 nAddress)
     XDeviceTableView::setSelectionAddress(nAddress,g_nBytesProLine);
 }
 
+void XStackView::drawText(QPainter *pPainter, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight, QString sText, TEXT_OPTION *pTextOption)
+{
+    QRect rectText;
+
+    rectText.setLeft(nLeft+getCharWidth());
+    rectText.setTop(nTop+getLineDelta());
+    rectText.setWidth(nWidth);
+    rectText.setHeight(nHeight-getLineDelta());
+
+    bool bSave=false;
+
+    if(bSave)
+    {
+        pPainter->save();
+    }
+
+    if(pTextOption->bSelected)
+    {
+        pPainter->fillRect(nLeft,nTop,nWidth,nHeight,viewport()->palette().color(QPalette::Highlight));
+    }
+
+    pPainter->drawText(rectText,sText);
+
+    if(bSave)
+    {
+        pPainter->restore();
+    }
+}
+
 XAbstractTableView::OS XStackView::cursorPositionToOS(CURSOR_POSITION cursorPosition)
 {
     OS osResult={};
 
-        osResult.nOffset=-1;
+    osResult.nOffset=-1;
 
-        if((cursorPosition.bIsValid)&&(cursorPosition.ptype==PT_CELL))
-        {
-            qint64 nBlockOffset=getViewStart()+(cursorPosition.nRow*g_nBytesProLine);
+    if((cursorPosition.bIsValid)&&(cursorPosition.ptype==PT_CELL))
+    {
+        qint64 nBlockOffset=getViewStart()+(cursorPosition.nRow*g_nBytesProLine);
 
-            osResult.nOffset=nBlockOffset;
-            osResult.nSize=g_nBytesProLine;
-        }
+        osResult.nOffset=nBlockOffset;
+        osResult.nSize=g_nBytesProLine;
+    }
 
-        return osResult;
+    return osResult;
 }
 
 void XStackView::updateData()
@@ -125,7 +154,6 @@ void XStackView::updateData()
         setCursorOffset(nCursorOffset);
 
         g_listRecords.clear();
-        g_listValues.clear();
 
         qint32 nDataBlockSize=g_nBytesProLine*getLinesProPage();
 
@@ -142,6 +170,7 @@ void XStackView::updateData()
             for(qint32 i=0;i<g_nDataBlockSize;i+=g_nBytesProLine)
             {
                 RECORD record={};
+                record.nOffset=i+nBlockOffset;
                 record.nAddress=i+g_options.nStartAddress+nBlockOffset;
 
                 qint64 nCurrentAddress=0;
@@ -157,10 +186,9 @@ void XStackView::updateData()
 
                 record.sAddress=XBinary::valueToHexColon(mode,nCurrentAddress);
 
-                QString sValue=XBinary::valueToHex(mode,XBinary::_read_value(mode,pData+i));
+                record.sValue=XBinary::valueToHex(mode,XBinary::_read_value(mode,pData+i));
 
                 g_listRecords.append(record);
-                g_listValues.append(sValue);
 
                 // TODO Comments
                 // TODO Breakpoints
@@ -169,7 +197,6 @@ void XStackView::updateData()
         else
         {
             g_baDataBuffer.clear();
-            g_listValues.clear();
         }
 
         setCurrentBlock(nBlockOffset,g_nDataBlockSize);
@@ -180,18 +207,24 @@ void XStackView::paintCell(QPainter *pPainter,qint32 nRow,qint32 nColumn,qint32 
 {
     Q_UNUSED(nWidth)
 
-    if(nColumn==COLUMN_ADDRESS)
+    qint32 nNumberOfRows=g_listRecords.count();
+
+    if(nRow<nNumberOfRows)
     {
-        if(nRow<g_listRecords.count())
+        qint64 nOffset=g_listRecords.at(nRow).nOffset;
+//        qint64 nAddress=g_listRecords.at(nRow).nAddress;
+
+        // TODO current SP
+        TEXT_OPTION textOption={};
+        textOption.bSelected=isOffsetSelected(nOffset);
+
+        if(nColumn==COLUMN_ADDRESS)
         {
-            pPainter->drawText(nLeft+getCharWidth(),nTop+nHeight,g_listRecords.at(nRow).sAddress); // TODO Text Optional
+            drawText(pPainter,nLeft,nTop,nWidth,nHeight,g_listRecords.at(nRow).sAddress,&textOption);
         }
-    }
-    else if(nColumn==COLUMN_VALUE)
-    {
-        if(nRow<g_listValues.count())
+        else if(nColumn==COLUMN_VALUE)
         {
-            pPainter->drawText(nLeft+getCharWidth(),nTop+nHeight,g_listValues.at(nRow)); // TODO Text Optional
+            drawText(pPainter,nLeft,nTop,nWidth,nHeight,g_listRecords.at(nRow).sValue,&textOption);
         }
     }
 }
