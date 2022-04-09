@@ -92,7 +92,7 @@ void XStackView::setSelectionAddress(qint64 nAddress)
     XDeviceTableView::setSelectionAddress(nAddress,g_nBytesProLine);
 }
 
-void XStackView::drawText(QPainter *pPainter, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight, QString sText, TEXT_OPTION *pTextOption)
+void XStackView::drawText(QPainter *pPainter,qint32 nLeft,qint32 nTop,qint32 nWidth,qint32 nHeight,QString sText,TEXT_OPTION *pTextOption)
 {
     QRect rectText;
 
