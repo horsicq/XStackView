@@ -42,7 +42,7 @@ XStackView::XStackView(QWidget *pParent) : XDeviceTableView(pParent)
     setTextFont(getMonoFont(10));
 }
 
-void XStackView::setData(QIODevice *pDevice,OPTIONS options)
+void XStackView::setData(QIODevice *pDevice,OPTIONS options,bool bReload)
 {
     g_options=options;
 
@@ -74,7 +74,10 @@ void XStackView::setData(QIODevice *pDevice,OPTIONS options)
 //    setSelection(options.nStartSelectionOffset,options.nSizeOfSelection);
 //    setCursorOffset(options.nStartSelectionOffset,COLUMN_HEX);
 
-    reload(true);
+    if(bReload)
+    {
+        reload(true);
+    }
 }
 
 void XStackView::goToAddress(qint64 nAddress)
