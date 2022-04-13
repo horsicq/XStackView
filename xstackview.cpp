@@ -340,6 +340,11 @@ void XStackView::_headerClicked(qint32 nColumn)
 
         adjust(true);
     }
+    else if(nColumn==COLUMN_COMMENT)
+    {
+        // TODO
+        // Mix -> Strings -> Modules
+    }
 }
 
 void XStackView::_cellDoubleClicked(qint32 nRow,qint32 nColumn)
