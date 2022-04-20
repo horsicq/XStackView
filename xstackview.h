@@ -43,6 +43,8 @@ public:
     void goToOffset(qint64 nOffset);
     void setSelectionAddress(qint64 nAddress);
 
+    void adjustView();
+
 private:
     enum COLUMN
     {
@@ -57,6 +59,7 @@ private:
         QString sAddress;
         qint64 nAddress;
         QString sValue;
+        QString sComment;
     };
 
     struct TEXT_OPTION

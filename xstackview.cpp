@@ -95,6 +95,24 @@ void XStackView::setSelectionAddress(qint64 nAddress)
     XDeviceTableView::setSelectionAddress(nAddress,g_nBytesProLine);
 }
 
+void XStackView::adjustView()
+{
+    QFont _font;
+    QString sFont=getGlobalOptions()->getValue(XOptions::ID_STACK_FONT).toString();
+
+    if((sFont!="")&&_font.fromString(sFont))
+    {
+        setTextFont(_font);
+    }
+    // mb TODO errorString signal if invalid font
+    // TODO Check
+
+    if(getDevice())
+    {
+        reload(true);
+    }
+}
+
 void XStackView::drawText(QPainter *pPainter,qint32 nLeft,qint32 nTop,qint32 nWidth,qint32 nHeight,QString sText,TEXT_OPTION *pTextOption)
 {
     QRect rectText;
@@ -195,7 +213,11 @@ void XStackView::updateData()
 
                 record.sAddress=XBinary::valueToHexColon(mode,nCurrentAddress);
 
-                record.sValue=XBinary::valueToHex(mode,XBinary::_read_value(mode,pData+i));
+                quint64 nValue=XBinary::_read_value(mode,pData+i);
+
+                record.sComment=XInfoDB::recordInfoToString(getXInfoDB()->getRecordInfo(nValue),XInfoDB::RI_TYPE_GENERAL);
+
+                record.sValue=XBinary::valueToHex(mode,nValue);
 
                 g_listRecords.append(record);
 
@@ -234,6 +256,10 @@ void XStackView::paintCell(QPainter *pPainter,qint32 nRow,qint32 nColumn,qint32 
         else if(nColumn==COLUMN_VALUE)
         {
             drawText(pPainter,nLeft,nTop,nWidth,nHeight,g_listRecords.at(nRow).sValue,&textOption);
+        }
+        else if(nColumn==COLUMN_COMMENT)
+        {
+            drawText(pPainter,nLeft,nTop,nWidth,nHeight,g_listRecords.at(nRow).sComment,&textOption);
         }
     }
 }
