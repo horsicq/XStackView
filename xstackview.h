@@ -67,6 +67,15 @@ private:
         bool bSelected;
     };
 
+    enum MODE_COMMENT
+    {
+        MODE_COMMENT_GENERAL=0,
+        MODE_COMMENT_ADDRESS,
+        MODE_COMMENT_ANSI,
+        MODE_COMMENT_UNICODE,
+        MODE_COMMENT_UTF8
+    };
+
     void drawText(QPainter *pPainter,qint32 nLeft,qint32 nTop,qint32 nWidth,qint32 nHeight,QString sText,TEXT_OPTION *pTextOption);
 
 protected:
@@ -90,6 +99,7 @@ private:
     QList<RECORD> g_listRecords;
     qint32 g_nAddressWidth;
     qint32 g_nDataBlockSize;
+    MODE_COMMENT g_modeComment;
 };
 
 #endif // XSTACKVIEW_H

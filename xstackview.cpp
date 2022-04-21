@@ -33,11 +33,13 @@ XStackView::XStackView(QWidget *pParent) : XDeviceTableView(pParent)
         g_nAddressWidth=8;
     }
 
+    g_modeComment=MODE_COMMENT_GENERAL;
+
     addColumn(tr("Address"),0,true);
     addColumn(tr("Value"));
-    addColumn(tr("Comment"));
+    addColumn(tr("Comment"),0,true);
 
-    setLastColumnStretch(true);
+//    setLastColumnStretch(true);
 
     setTextFont(getMonoFont(10));
 }
@@ -134,7 +136,10 @@ void XStackView::drawText(QPainter *pPainter,qint32 nLeft,qint32 nTop,qint32 nWi
         pPainter->fillRect(nLeft,nTop,nWidth,nHeight,viewport()->palette().color(QPalette::Highlight));
     }
 
-    pPainter->drawText(rectText,sText);
+    QTextOption textOption;
+    textOption.setWrapMode(QTextOption::NoWrap);
+
+    pPainter->drawText(rectText,sText,textOption);
 
     if(bSave)
     {
@@ -215,7 +220,15 @@ void XStackView::updateData()
 
                 quint64 nValue=XBinary::_read_value(mode,pData+i);
 
-                record.sComment=XInfoDB::recordInfoToString(getXInfoDB()->getRecordInfo(nValue),XInfoDB::RI_TYPE_GENERAL);
+                XInfoDB::RI_TYPE riType=XInfoDB::RI_TYPE_GENERAL;
+
+                if      (g_modeComment==MODE_COMMENT_GENERAL)       riType=XInfoDB::RI_TYPE_GENERAL;
+                else if (g_modeComment==MODE_COMMENT_ADDRESS)       riType=XInfoDB::RI_TYPE_ADDRESS;
+                else if (g_modeComment==MODE_COMMENT_ANSI)          riType=XInfoDB::RI_TYPE_ANSI;
+                else if (g_modeComment==MODE_COMMENT_UNICODE)       riType=XInfoDB::RI_TYPE_UNICODE;
+                else if (g_modeComment==MODE_COMMENT_UTF8)          riType=XInfoDB::RI_TYPE_UTF8;
+
+                record.sComment=XInfoDB::recordInfoToString(getXInfoDB()->getRecordInfo(nValue),riType);
 
                 record.sValue=XBinary::valueToHex(mode,nValue);
 
@@ -342,6 +355,8 @@ void XStackView::adjustColumns()
         setColumnWidth(COLUMN_ADDRESS,2*getCharWidth()+fm.boundingRect("0000:0000").width());
         setColumnWidth(COLUMN_VALUE,2*getCharWidth()+fm.boundingRect("0000:0000").width());
     }
+
+    setColumnWidth(COLUMN_COMMENT,60*getCharWidth());
 }
 
 void XStackView::registerShortcuts(bool bState)
@@ -368,8 +383,33 @@ void XStackView::_headerClicked(qint32 nColumn)
     }
     else if(nColumn==COLUMN_COMMENT)
     {
-        // TODO
-        // Mix -> Strings -> Modules
+        if(g_modeComment==MODE_COMMENT_GENERAL)
+        {
+            setColumnTitle(COLUMN_COMMENT,tr("Address"));
+            g_modeComment=MODE_COMMENT_ADDRESS;
+        }
+        else if(g_modeComment==MODE_COMMENT_ADDRESS)
+        {
+            setColumnTitle(COLUMN_COMMENT,QString("Ansi"));
+            g_modeComment=MODE_COMMENT_ANSI;
+        }
+        else if(g_modeComment==MODE_COMMENT_ANSI)
+        {
+            setColumnTitle(COLUMN_COMMENT,QString("Unicode"));
+            g_modeComment=MODE_COMMENT_UNICODE;
+        }
+        else if(g_modeComment==MODE_COMMENT_UNICODE)
+        {
+            setColumnTitle(COLUMN_COMMENT,QString("UTF8"));
+            g_modeComment=MODE_COMMENT_UTF8;
+        }
+        else if(g_modeComment==MODE_COMMENT_UTF8)
+        {
+            setColumnTitle(COLUMN_COMMENT,tr("Comment"));
+            g_modeComment=MODE_COMMENT_GENERAL;
+        }
+
+        adjust(true);
     }
 }
 
