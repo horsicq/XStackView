@@ -228,7 +228,7 @@ void XStackView::updateData()
                 else if (g_modeComment==MODE_COMMENT_UNICODE)       riType=XInfoDB::RI_TYPE_UNICODE;
                 else if (g_modeComment==MODE_COMMENT_UTF8)          riType=XInfoDB::RI_TYPE_UTF8;
 
-                record.sComment=XInfoDB::recordInfoToString(getXInfoDB()->getRecordInfo(nValue),riType);
+                record.sComment=XInfoDB::recordInfoToString(getXInfoDB()->getRecordInfo(nValue,XInfoDB::RI_TYPE_GENERAL),riType);
 
                 record.sValue=XBinary::valueToHex(mode,nValue);
 
