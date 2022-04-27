@@ -38,13 +38,16 @@ XStackViewOptionsWidget::~XStackViewOptionsWidget()
 void XStackViewOptionsWidget::setOptions(XOptions *pOptions)
 {
     g_pOptions=pOptions;
-
-    g_pOptions->setLineEdit(ui->lineEditStackFont,XOptions::ID_STACK_FONT);
 }
 
 void XStackViewOptionsWidget::save()
 {
     g_pOptions->getLineEdit(ui->lineEditStackFont,XOptions::ID_STACK_FONT);
+}
+
+void XStackViewOptionsWidget::reload()
+{
+    g_pOptions->setLineEdit(ui->lineEditStackFont,XOptions::ID_STACK_FONT);
 }
 
 void XStackViewOptionsWidget::setDefaultValues(XOptions *pOptions)

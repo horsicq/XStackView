@@ -37,10 +37,12 @@ public:
     ~XStackViewOptionsWidget();
 
     void setOptions(XOptions *pOptions);
-    void save();
+
     static void setDefaultValues(XOptions *pOptions);
 
 private slots:
+    void save();
+    void reload();
     void on_toolButtonStackFont_clicked();
 
 private:
