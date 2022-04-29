@@ -197,6 +197,14 @@ void XStackView::updateData()
 
         if(g_nDataBlockSize)
         {
+            XInfoDB::RI_TYPE riType=XInfoDB::RI_TYPE_GENERAL;
+
+            if      (g_modeComment==MODE_COMMENT_GENERAL)       riType=XInfoDB::RI_TYPE_GENERAL;
+            else if (g_modeComment==MODE_COMMENT_ADDRESS)       riType=XInfoDB::RI_TYPE_ADDRESS;
+            else if (g_modeComment==MODE_COMMENT_ANSI)          riType=XInfoDB::RI_TYPE_ANSI;
+            else if (g_modeComment==MODE_COMMENT_UNICODE)       riType=XInfoDB::RI_TYPE_UNICODE;
+            else if (g_modeComment==MODE_COMMENT_UTF8)          riType=XInfoDB::RI_TYPE_UTF8;
+
             char *pData=g_baDataBuffer.data();
 
             for(qint32 i=0;i<g_nDataBlockSize;i+=g_nBytesProLine)
@@ -216,19 +224,11 @@ void XStackView::updateData()
                     nCurrentAddress=i+nBlockOffset;
                 }
 
-                record.sAddress=XBinary::valueToHexColon(mode,nCurrentAddress);
+                record.sAddress=XBinary::valueToHexColon(mode,nCurrentAddress); // TODO Settings
 
                 quint64 nValue=XBinary::_read_value(mode,pData+i);
 
-                XInfoDB::RI_TYPE riType=XInfoDB::RI_TYPE_GENERAL;
-
-                if      (g_modeComment==MODE_COMMENT_GENERAL)       riType=XInfoDB::RI_TYPE_GENERAL;
-                else if (g_modeComment==MODE_COMMENT_ADDRESS)       riType=XInfoDB::RI_TYPE_ADDRESS;
-                else if (g_modeComment==MODE_COMMENT_ANSI)          riType=XInfoDB::RI_TYPE_ANSI;
-                else if (g_modeComment==MODE_COMMENT_UNICODE)       riType=XInfoDB::RI_TYPE_UNICODE;
-                else if (g_modeComment==MODE_COMMENT_UTF8)          riType=XInfoDB::RI_TYPE_UTF8;
-
-                record.sComment=XInfoDB::recordInfoToString(getXInfoDB()->getRecordInfo(nValue,XInfoDB::RI_TYPE_GENERAL),riType);
+                record.sComment=XInfoDB::recordInfoToString(getXInfoDB()->getRecordInfoCache(nValue),riType);
 
                 record.sValue=XBinary::valueToHex(mode,nValue);
 
