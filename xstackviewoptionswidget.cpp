@@ -38,6 +38,8 @@ XStackViewOptionsWidget::~XStackViewOptionsWidget()
 void XStackViewOptionsWidget::setOptions(XOptions *pOptions)
 {
     g_pOptions=pOptions;
+
+    reload();
 }
 
 void XStackViewOptionsWidget::save()
