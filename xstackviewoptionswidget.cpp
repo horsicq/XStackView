@@ -45,11 +45,13 @@ void XStackViewOptionsWidget::setOptions(XOptions *pOptions)
 void XStackViewOptionsWidget::save()
 {
     g_pOptions->getLineEdit(ui->lineEditStackFont,XOptions::ID_STACK_FONT);
+    g_pOptions->getCheckBox(ui->checkBoxStackAddressColon,XOptions::ID_STACK_ADDRESSCOLON);
 }
 
 void XStackViewOptionsWidget::reload()
 {
     g_pOptions->setLineEdit(ui->lineEditStackFont,XOptions::ID_STACK_FONT);
+    g_pOptions->setCheckBox(ui->checkBoxStackAddressColon,XOptions::ID_STACK_ADDRESSCOLON);
 }
 
 void XStackViewOptionsWidget::setDefaultValues(XOptions *pOptions)
@@ -63,6 +65,7 @@ void XStackViewOptionsWidget::setDefaultValues(XOptions *pOptions)
 #ifdef Q_OS_OSX
     pOptions->addID(XOptions::ID_STACK_FONT,"Menlo,10,-1,5,50,0,0,0,0,0"); // TODO Check
 #endif
+    pOptions->addID(XOptions::ID_HEX_ADDRESSCOLON,true);
 }
 
 void XStackViewOptionsWidget::on_toolButtonStackFont_clicked()

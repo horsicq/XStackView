@@ -34,6 +34,7 @@ XStackView::XStackView(QWidget *pParent) : XDeviceTableView(pParent)
     }
 
     g_modeComment=MODE_COMMENT_GENERAL;
+    g_bIsAddressColon=false;
 
     addColumn(tr("Address"),0,true);
     addColumn(tr("Value"));
@@ -76,6 +77,8 @@ void XStackView::setData(QIODevice *pDevice,OPTIONS options,bool bReload)
 //    setSelection(options.nStartSelectionOffset,options.nSizeOfSelection);
 //    setCursorOffset(options.nStartSelectionOffset,COLUMN_HEX);
 
+    _adjustView();
+
     if(bReload)
     {
         reload(true);
@@ -97,7 +100,7 @@ void XStackView::setSelectionAddress(qint64 nAddress)
     XDeviceTableView::setSelectionAddress(nAddress,g_nBytesProLine);
 }
 
-void XStackView::adjustView()
+void XStackView::_adjustView()
 {
     QFont _font;
     QString sFont=getGlobalOptions()->getValue(XOptions::ID_STACK_FONT).toString();
@@ -108,6 +111,12 @@ void XStackView::adjustView()
     }
     // mb TODO errorString signal if invalid font
     // TODO Check
+    g_bIsAddressColon=getGlobalOptions()->getValue(XOptions::ID_STACK_ADDRESSCOLON).toBool();
+}
+
+void XStackView::adjustView()
+{
+    _adjustView();
 
     if(getDevice())
     {
@@ -224,7 +233,14 @@ void XStackView::updateData()
                     nCurrentAddress=i+nBlockOffset;
                 }
 
-                record.sAddress=XBinary::valueToHexColon(mode,nCurrentAddress); // TODO Settings
+                if(g_bIsAddressColon)
+                {
+                    record.sAddress=XBinary::valueToHexColon(mode,nCurrentAddress); // TODO Settings
+                }
+                else
+                {
+                    record.sAddress=XBinary::valueToHex(mode,nCurrentAddress);
+                }
 
                 quint64 nValue=XBinary::_read_value(mode,pData+i);
 

@@ -43,6 +43,7 @@ public:
     void goToOffset(qint64 nOffset);
     void setSelectionAddress(qint64 nAddress);
 
+    void _adjustView();
     void adjustView();
 
 private:
@@ -100,6 +101,7 @@ private:
     qint32 g_nAddressWidth;
     qint32 g_nDataBlockSize;
     MODE_COMMENT g_modeComment;
+    bool g_bIsAddressColon;
 };
 
 #endif // XSTACKVIEW_H
