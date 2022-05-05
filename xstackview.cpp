@@ -21,7 +21,8 @@
 #include "xstackview.h"
 
 XStackView::XStackView(QWidget *pParent) : XDeviceTableView(pParent)
-{  
+{
+    // TODO Check
     if(sizeof(void *)==8)
     {
         g_nBytesProLine=8;
