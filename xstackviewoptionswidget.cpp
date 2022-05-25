@@ -65,7 +65,7 @@ void XStackViewOptionsWidget::setDefaultValues(XOptions *pOptions)
 #ifdef Q_OS_OSX
     pOptions->addID(XOptions::ID_STACK_FONT,"Menlo,10,-1,5,50,0,0,0,0,0"); // TODO Check
 #endif
-    pOptions->addID(XOptions::ID_HEX_ADDRESSCOLON,true);
+    pOptions->addID(XOptions::ID_STACK_ADDRESSCOLON,true);
 }
 
 void XStackViewOptionsWidget::on_toolButtonStackFont_clicked()
