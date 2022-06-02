@@ -20,7 +20,7 @@
  */
 #include "xstackview.h"
 
-XStackView::XStackView(QWidget *pParent) : XDeviceTableView(pParent)
+XStackView::XStackView(QWidget *pParent) : XDeviceTableEditView(pParent)
 {
     // TODO Check
     if(sizeof(void *)==8)
@@ -444,30 +444,3 @@ qint64 XStackView::getRecordSize(qint64 nOffset)
     return g_nBytesProLine;
 }
 
-void XStackView::_editHex()
-{
-    if(!isReadonly())
-    {
-        STATE state=getState();
-
-        SubDevice sd(getDevice(),state.nSelectionOffset,state.nSelectionSize);
-
-        if(sd.open(QIODevice::ReadWrite))
-        {
-            DialogHexEdit dialogHexEdit(this);
-
-            dialogHexEdit.setGlobal(getShortcuts(),getGlobalOptions());
-
-    //        connect(&dialogHexEdit,SIGNAL(changed()),this,SLOT(_setEdited()));
-
-            dialogHexEdit.setData(&sd,state.nSelectionOffset);
-            dialogHexEdit.setBackupDevice(getBackupDevice());
-
-            dialogHexEdit.exec();
-
-            _setEdited();
-
-            sd.close();
-        }
-    }
-}

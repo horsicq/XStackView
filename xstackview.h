@@ -21,13 +21,12 @@
 #ifndef XSTACKVIEW_H
 #define XSTACKVIEW_H
 
-#include "dialoghexedit.h"
-#include "xdevicetableview.h"
+#include "xdevicetableeditview.h"
 
 // TODO header clickable Address -> Offset -> ESP ->EBP
 // TODO show comments
 
-class XStackView : public XDeviceTableView
+class XStackView : public XDeviceTableEditView
 {
     Q_OBJECT
 
@@ -93,9 +92,6 @@ protected:
     virtual void _headerClicked(qint32 nColumn);
     virtual void _cellDoubleClicked(qint32 nRow,qint32 nColumn);
     virtual qint64 getRecordSize(qint64 nOffset);
-
-protected slots:
-    void _editHex();
 
 private:
     qint32 g_nBytesProLine;
