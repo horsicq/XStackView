@@ -434,7 +434,7 @@ void XStackView::_cellDoubleClicked(qint32 nRow,qint32 nColumn)
 {
     Q_UNUSED(nRow)
     Q_UNUSED(nColumn)
-    // TODO
+    // TODO Edit
 }
 
 qint64 XStackView::getRecordSize(qint64 nOffset)
