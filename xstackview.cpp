@@ -36,6 +36,7 @@ XStackView::XStackView(QWidget *pParent) : XDeviceTableEditView(pParent)
 
     g_modeComment=MODE_COMMENT_GENERAL;
     g_bIsAddressColon=false;
+    g_nCurrentStackPointer=-1;
 
     addColumn(tr("Address"),0,true);
     addColumn(tr("Value"));
@@ -74,6 +75,8 @@ void XStackView::setData(QIODevice *pDevice,OPTIONS options,bool bReload)
     {
         goToAddress(options.nCurrentAddress);
     }
+
+    setCurrentStackPointer(options.nCurrentStackPointer);
 
 //    setSelection(options.nStartSelectionOffset,options.nSizeOfSelection);
 //    setCursorOffset(options.nStartSelectionOffset,COLUMN_HEX);
@@ -125,6 +128,11 @@ void XStackView::adjustView()
     }
 }
 
+void XStackView::setCurrentStackPointer(XADDR nAddress)
+{
+    g_nCurrentStackPointer=nAddress;
+}
+
 void XStackView::drawText(QPainter *pPainter,qint32 nLeft,qint32 nTop,qint32 nWidth,qint32 nHeight,QString sText,TEXT_OPTION *pTextOption)
 {
     QRect rectText;
@@ -136,14 +144,29 @@ void XStackView::drawText(QPainter *pPainter,qint32 nLeft,qint32 nTop,qint32 nWi
 
     bool bSave=false;
 
+    if((pTextOption->bCursor)||(pTextOption->bCurrentSP))
+    {
+        bSave=true;
+    }
+
     if(bSave)
     {
         pPainter->save();
     }
 
-    if(pTextOption->bSelected)
+    if((pTextOption->bSelected)&&(!pTextOption->bCursor)&&(!pTextOption->bCurrentSP))
     {
         pPainter->fillRect(nLeft,nTop,nWidth,nHeight,viewport()->palette().color(QPalette::Highlight));
+    }
+
+    if(pTextOption->bIsReplaced)
+    {
+        pPainter->fillRect(nLeft,nTop,nWidth,nHeight,QColor(Qt::red));
+    }
+    else if((pTextOption->bCursor)||(pTextOption->bCurrentSP))
+    {
+        pPainter->fillRect(nLeft,nTop,nWidth,nHeight,viewport()->palette().color(QPalette::WindowText));
+        pPainter->setPen(viewport()->palette().color(QPalette::Base));
     }
 
     QTextOption textOption;
@@ -184,16 +207,17 @@ void XStackView::updateData()
 
             setMemoryReplaces(listMR);
         }
-        // Update cursor position
+
         qint64 nBlockOffset=getViewStart();
-        qint64 nCursorOffset=nBlockOffset;
+        // Update cursor position
+//        qint64 nCursorOffset=nBlockOffset;
 
-        if(nCursorOffset>=getDataSize())
-        {
-            nCursorOffset=getDataSize()-1;
-        }
+//        if(nCursorOffset>=getDataSize())
+//        {
+//            nCursorOffset=getDataSize()-1;
+//        }
 
-        setCursorOffset(nCursorOffset);
+//        setCursorOffset(nCursorOffset);
 
         g_listRecords.clear();
 
@@ -270,14 +294,19 @@ void XStackView::paintCell(QPainter *pPainter,qint32 nRow,qint32 nColumn,qint32 
 
     qint32 nNumberOfRows=g_listRecords.count();
 
+    qint64 nCursorOffset=getState().nCursorOffset;
+
     if(nRow<nNumberOfRows)
     {
         qint64 nOffset=g_listRecords.at(nRow).nOffset;
-//        qint64 nAddress=g_listRecords.at(nRow).nAddress;
+        qint64 nAddress=g_listRecords.at(nRow).nAddress;
 
-        // TODO current SP
+        // TODO replaced !!!
         TEXT_OPTION textOption={};
         textOption.bSelected=isOffsetSelected(nOffset);
+        textOption.bCurrentSP=((g_nCurrentStackPointer!=-1)&&(nAddress==g_nCurrentStackPointer)&&(nColumn==COLUMN_ADDRESS));
+        textOption.bCursor=(nOffset==nCursorOffset)&&(nColumn==COLUMN_VALUE);
+//        textOption.bIsReplaced=((g_listRecords.at(nRow).bIsReplaced)&&(nColumn==COLUMN_ADDRESS));
 
         if(nColumn==COLUMN_ADDRESS)
         {
@@ -302,7 +331,7 @@ void XStackView::contextMenu(const QPoint &pos)
 
 void XStackView::keyPressEvent(QKeyEvent *pEvent)
 {
-    Q_UNUSED(pEvent)
+    XAbstractTableView::keyPressEvent(pEvent);
 }
 
 qint64 XStackView::getScrollValue()
@@ -355,6 +384,8 @@ void XStackView::setScrollValue(qint64 nOffset)
     }
 
     verticalScrollBar()->setValue(nValue);
+    
+    // adjust(true);
 }
 
 void XStackView::adjustColumns()

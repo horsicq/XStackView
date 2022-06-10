@@ -33,8 +33,9 @@ class XStackView : public XDeviceTableEditView
 public:
     struct OPTIONS
     {
-        qint64 nStartAddress;
-        qint64 nCurrentAddress;
+        XADDR nStartAddress;
+        XADDR nCurrentAddress;
+        XADDR nCurrentStackPointer;
     };
 
     explicit XStackView(QWidget *pParent=nullptr);
@@ -45,6 +46,8 @@ public:
 
     void _adjustView();
     void adjustView();
+
+    void setCurrentStackPointer(XADDR nAddress);
 
 private:
     enum COLUMN
@@ -66,6 +69,9 @@ private:
     struct TEXT_OPTION
     {
         bool bSelected;
+        bool bCurrentSP;
+        bool bCursor;
+        bool bIsReplaced;
     };
 
     enum MODE_COMMENT
@@ -102,6 +108,7 @@ private:
     qint32 g_nDataBlockSize;
     MODE_COMMENT g_modeComment;
     bool g_bIsAddressColon;
+    XADDR g_nCurrentStackPointer;
 };
 
 #endif // XSTACKVIEW_H
