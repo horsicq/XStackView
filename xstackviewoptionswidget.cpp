@@ -28,6 +28,8 @@ XStackViewOptionsWidget::XStackViewOptionsWidget(QWidget *pParent) :
     ui->setupUi(this);
 
     g_pOptions=nullptr;
+
+    setProperty("GROUPID",XOptions::GROUPID_STACK);
 }
 
 XStackViewOptionsWidget::~XStackViewOptionsWidget()
