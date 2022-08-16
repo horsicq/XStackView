@@ -91,7 +91,7 @@
        <item>
         <widget class="QCheckBox" name="checkBoxStackAddressColon">
          <property name="text">
-          <string>Address colon</string>
+          <string>Show colons in addresses</string>
          </property>
         </widget>
        </item>
