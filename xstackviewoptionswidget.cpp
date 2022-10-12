@@ -72,14 +72,5 @@ void XStackViewOptionsWidget::setDefaultValues(XOptions *pOptions)
 
 void XStackViewOptionsWidget::on_toolButtonStackFont_clicked()
 {
-    QFont _font;
-    _font.fromString(ui->lineEditStackFont->text());
-
-    bool bOK=false;
-    _font=QFontDialog::getFont(&bOK,_font,this);
-
-    if(bOK)
-    {
-        ui->lineEditStackFont->setText(_font.toString());
-    }
+    XOptions::handleFontButton(this,ui->lineEditStackFont);
 }
