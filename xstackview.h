@@ -26,20 +26,18 @@
 // TODO header clickable Address -> Offset -> ESP ->EBP
 // TODO show comments
 
-class XStackView : public XDeviceTableEditView
-{
+class XStackView : public XDeviceTableEditView {
     Q_OBJECT
 
 public:
-    struct OPTIONS
-    {
+    struct OPTIONS {
         XADDR nStartAddress;
         XADDR nCurrentAddress;
         XADDR nCurrentStackPointer;
     };
 
-    explicit XStackView(QWidget *pParent=nullptr);
-    void setData(QIODevice *pDevice,OPTIONS options,bool bReload=true);
+    explicit XStackView(QWidget *pParent = nullptr);
+    void setData(QIODevice *pDevice, OPTIONS options, bool bReload = true);
     void goToAddress(qint64 nAddress);
     void goToOffset(qint64 nOffset);
     void setSelectionAddress(qint64 nAddress);
@@ -50,15 +48,13 @@ public:
     void setCurrentStackPointer(XADDR nAddress);
 
 private:
-    enum COLUMN
-    {
-        COLUMN_ADDRESS=0,
+    enum COLUMN {
+        COLUMN_ADDRESS = 0,
         COLUMN_VALUE,
         COLUMN_COMMENT
     };
 
-    struct RECORD
-    {
+    struct RECORD {
         qint64 nOffset;
         QString sAddress;
         qint64 nAddress;
@@ -66,29 +62,27 @@ private:
         QString sComment;
     };
 
-    struct TEXT_OPTION
-    {
+    struct TEXT_OPTION {
         bool bSelected;
         bool bCurrentSP;
         bool bCursor;
         bool bIsReplaced;
     };
 
-    enum MODE_COMMENT
-    {
-        MODE_COMMENT_GENERAL=0,
+    enum MODE_COMMENT {
+        MODE_COMMENT_GENERAL = 0,
         MODE_COMMENT_ADDRESS,
         MODE_COMMENT_ANSI,
         MODE_COMMENT_UNICODE,
         MODE_COMMENT_UTF8
     };
 
-    void drawText(QPainter *pPainter,qint32 nLeft,qint32 nTop,qint32 nWidth,qint32 nHeight,QString sText,TEXT_OPTION *pTextOption);
+    void drawText(QPainter *pPainter, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight, QString sText, TEXT_OPTION *pTextOption);
 
 protected:
     virtual OS cursorPositionToOS(CURSOR_POSITION cursorPosition);
     virtual void updateData();
-    virtual void paintCell(QPainter *pPainter,qint32 nRow,qint32 nColumn,qint32 nLeft,qint32 nTop,qint32 nWidth,qint32 nHeight);
+    virtual void paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight);
     virtual void contextMenu(const QPoint &pos);
     virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual qint64 getScrollValue();
@@ -96,7 +90,7 @@ protected:
     virtual void adjustColumns();
     virtual void registerShortcuts(bool bState);
     virtual void _headerClicked(qint32 nColumn);
-    virtual void _cellDoubleClicked(qint32 nRow,qint32 nColumn);
+    virtual void _cellDoubleClicked(qint32 nRow, qint32 nColumn);
     virtual qint64 getRecordSize(qint64 nOffset);
 
 private:
@@ -111,4 +105,4 @@ private:
     XADDR g_nCurrentStackPointer;
 };
 
-#endif // XSTACKVIEW_H
+#endif  // XSTACKVIEW_H

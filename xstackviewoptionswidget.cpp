@@ -19,58 +19,50 @@
  * SOFTWARE.
  */
 #include "xstackviewoptionswidget.h"
+
 #include "ui_xstackviewoptionswidget.h"
 
-XStackViewOptionsWidget::XStackViewOptionsWidget(QWidget *pParent) :
-    QWidget(pParent),
-    ui(new Ui::XStackViewOptionsWidget)
-{
+XStackViewOptionsWidget::XStackViewOptionsWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::XStackViewOptionsWidget) {
     ui->setupUi(this);
 
-    g_pOptions=nullptr;
+    g_pOptions = nullptr;
 
-    setProperty("GROUPID",XOptions::GROUPID_STACK);
+    setProperty("GROUPID", XOptions::GROUPID_STACK);
 }
 
-XStackViewOptionsWidget::~XStackViewOptionsWidget()
-{
+XStackViewOptionsWidget::~XStackViewOptionsWidget() {
     delete ui;
 }
 
-void XStackViewOptionsWidget::setOptions(XOptions *pOptions)
-{
-    g_pOptions=pOptions;
+void XStackViewOptionsWidget::setOptions(XOptions *pOptions) {
+    g_pOptions = pOptions;
 
     reload();
 }
 
-void XStackViewOptionsWidget::save()
-{
-    g_pOptions->getLineEdit(ui->lineEditStackFont,XOptions::ID_STACK_FONT);
-    g_pOptions->getCheckBox(ui->checkBoxStackAddressColon,XOptions::ID_STACK_ADDRESSCOLON);
+void XStackViewOptionsWidget::save() {
+    g_pOptions->getLineEdit(ui->lineEditStackFont, XOptions::ID_STACK_FONT);
+    g_pOptions->getCheckBox(ui->checkBoxStackAddressColon, XOptions::ID_STACK_ADDRESSCOLON);
 }
 
-void XStackViewOptionsWidget::reload()
-{
-    g_pOptions->setLineEdit(ui->lineEditStackFont,XOptions::ID_STACK_FONT);
-    g_pOptions->setCheckBox(ui->checkBoxStackAddressColon,XOptions::ID_STACK_ADDRESSCOLON);
+void XStackViewOptionsWidget::reload() {
+    g_pOptions->setLineEdit(ui->lineEditStackFont, XOptions::ID_STACK_FONT);
+    g_pOptions->setCheckBox(ui->checkBoxStackAddressColon, XOptions::ID_STACK_ADDRESSCOLON);
 }
 
-void XStackViewOptionsWidget::setDefaultValues(XOptions *pOptions)
-{
+void XStackViewOptionsWidget::setDefaultValues(XOptions *pOptions) {
 #ifdef Q_OS_WIN
-    pOptions->addID(XOptions::ID_STACK_FONT,"Courier,10,-1,5,50,0,0,0,0,0");
+    pOptions->addID(XOptions::ID_STACK_FONT, "Courier,10,-1,5,50,0,0,0,0,0");
 #endif
 #ifdef Q_OS_LINUX
-    pOptions->addID(XOptions::ID_STACK_FONT,"DejaVu Sans Mono,10,-1,5,50,0,0,0,0,0");
+    pOptions->addID(XOptions::ID_STACK_FONT, "DejaVu Sans Mono,10,-1,5,50,0,0,0,0,0");
 #endif
 #ifdef Q_OS_MACOS
-    pOptions->addID(XOptions::ID_STACK_FONT,"Menlo,10,-1,5,50,0,0,0,0,0"); // TODO Check
+    pOptions->addID(XOptions::ID_STACK_FONT, "Menlo,10,-1,5,50,0,0,0,0,0");  // TODO Check
 #endif
-    pOptions->addID(XOptions::ID_STACK_ADDRESSCOLON,true);
+    pOptions->addID(XOptions::ID_STACK_ADDRESSCOLON, true);
 }
 
-void XStackViewOptionsWidget::on_toolButtonStackFont_clicked()
-{
-    XOptions::handleFontButton(this,ui->lineEditStackFont);
+void XStackViewOptionsWidget::on_toolButtonStackFont_clicked() {
+    XOptions::handleFontButton(this, ui->lineEditStackFont);
 }

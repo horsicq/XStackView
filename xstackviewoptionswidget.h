@@ -22,18 +22,18 @@
 #define XSTACKVIEWOPTIONSWIDGET_H
 
 #include <QFontDialog>
+
 #include "xoptions.h"
 
 namespace Ui {
 class XStackViewOptionsWidget;
 }
 
-class XStackViewOptionsWidget : public QWidget
-{
+class XStackViewOptionsWidget : public QWidget {
     Q_OBJECT
 
 public:
-    explicit XStackViewOptionsWidget(QWidget *pParent=nullptr);
+    explicit XStackViewOptionsWidget(QWidget *pParent = nullptr);
     ~XStackViewOptionsWidget();
 
     void setOptions(XOptions *pOptions);
@@ -50,4 +50,4 @@ private:
     XOptions *g_pOptions;
 };
 
-#endif // XSTACKVIEWOPTIONSWIDGET_H
+#endif  // XSTACKVIEWOPTIONSWIDGET_H
