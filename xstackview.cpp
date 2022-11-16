@@ -20,7 +20,8 @@
  */
 #include "xstackview.h"
 
-XStackView::XStackView(QWidget *pParent) : XDeviceTableEditView(pParent) {
+XStackView::XStackView(QWidget *pParent) : XDeviceTableEditView(pParent)
+{
     // TODO Check
     if (sizeof(void *) == 8) {
         g_nBytesProLine = 8;
@@ -43,7 +44,8 @@ XStackView::XStackView(QWidget *pParent) : XDeviceTableEditView(pParent) {
     setTextFont(getMonoFont(10));
 }
 
-void XStackView::setData(QIODevice *pDevice, OPTIONS options, bool bReload) {
+void XStackView::setData(QIODevice *pDevice, OPTIONS options, bool bReload)
+{
     g_options = options;
 
     setDevice(pDevice);
@@ -81,19 +83,23 @@ void XStackView::setData(QIODevice *pDevice, OPTIONS options, bool bReload) {
     }
 }
 
-void XStackView::goToAddress(qint64 nAddress) {
+void XStackView::goToAddress(qint64 nAddress)
+{
     _goToOffset(nAddress - g_options.nStartAddress);
 }
 
-void XStackView::goToOffset(qint64 nOffset) {
+void XStackView::goToOffset(qint64 nOffset)
+{
     _goToOffset(nOffset);
 }
 
-void XStackView::setSelectionAddress(qint64 nAddress) {
+void XStackView::setSelectionAddress(qint64 nAddress)
+{
     XDeviceTableView::setSelectionAddress(nAddress, g_nBytesProLine);
 }
 
-void XStackView::_adjustView() {
+void XStackView::_adjustView()
+{
     QFont _font;
     QString sFont = getGlobalOptions()->getValue(XOptions::ID_STACK_FONT).toString();
 
@@ -105,7 +111,8 @@ void XStackView::_adjustView() {
     g_bIsAddressColon = getGlobalOptions()->getValue(XOptions::ID_STACK_ADDRESSCOLON).toBool();
 }
 
-void XStackView::adjustView() {
+void XStackView::adjustView()
+{
     _adjustView();
 
     if (getDevice()) {
@@ -113,11 +120,13 @@ void XStackView::adjustView() {
     }
 }
 
-void XStackView::setCurrentStackPointer(XADDR nAddress) {
+void XStackView::setCurrentStackPointer(XADDR nAddress)
+{
     g_nCurrentStackPointer = nAddress;
 }
 
-void XStackView::drawText(QPainter *pPainter, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight, QString sText, TEXT_OPTION *pTextOption) {
+void XStackView::drawText(QPainter *pPainter, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight, QString sText, TEXT_OPTION *pTextOption)
+{
     QRect rectText;
 
     rectText.setLeft(nLeft + getCharWidth());
@@ -156,7 +165,8 @@ void XStackView::drawText(QPainter *pPainter, qint32 nLeft, qint32 nTop, qint32 
     }
 }
 
-XAbstractTableView::OS XStackView::cursorPositionToOS(CURSOR_POSITION cursorPosition) {
+XAbstractTableView::OS XStackView::cursorPositionToOS(CURSOR_POSITION cursorPosition)
+{
     OS osResult = {};
 
     osResult.nOffset = -1;
@@ -171,7 +181,8 @@ XAbstractTableView::OS XStackView::cursorPositionToOS(CURSOR_POSITION cursorPosi
     return osResult;
 }
 
-void XStackView::updateData() {
+void XStackView::updateData()
+{
     if (getDevice()) {
         if (getXInfoDB()) {
             QList<XBinary::MEMORY_REPLACE> listMR = getXInfoDB()->getMemoryReplaces(getMemoryMap()->nModuleAddress, getMemoryMap()->nImageSize);
@@ -254,7 +265,8 @@ void XStackView::updateData() {
     }
 }
 
-void XStackView::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight) {
+void XStackView::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint32 nLeft, qint32 nTop, qint32 nWidth, qint32 nHeight)
+{
     Q_UNUSED(nWidth)
 
     qint32 nNumberOfRows = g_listRecords.count();
@@ -282,16 +294,19 @@ void XStackView::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint
     }
 }
 
-void XStackView::contextMenu(const QPoint &pos) {
+void XStackView::contextMenu(const QPoint &pos)
+{
     Q_UNUSED(pos)
     // TODO
 }
 
-void XStackView::keyPressEvent(QKeyEvent *pEvent) {
+void XStackView::keyPressEvent(QKeyEvent *pEvent)
+{
     XAbstractTableView::keyPressEvent(pEvent);
 }
 
-qint64 XStackView::getScrollValue() {
+qint64 XStackView::getScrollValue()
+{
     qint64 nResult = 0;
 
     qint32 nValue = verticalScrollBar()->value();
@@ -311,7 +326,8 @@ qint64 XStackView::getScrollValue() {
     return nResult;
 }
 
-void XStackView::setScrollValue(qint64 nOffset) {
+void XStackView::setScrollValue(qint64 nOffset)
+{
     setViewStart(nOffset);
 
     qint32 nValue = 0;
@@ -331,7 +347,8 @@ void XStackView::setScrollValue(qint64 nOffset) {
     // adjust(true);
 }
 
-void XStackView::adjustColumns() {
+void XStackView::adjustColumns()
+{
     const QFontMetricsF fm(getTextFont());
 
     // TODO option
@@ -346,11 +363,13 @@ void XStackView::adjustColumns() {
     setColumnWidth(COLUMN_COMMENT, 60 * getCharWidth());
 }
 
-void XStackView::registerShortcuts(bool bState) {
+void XStackView::registerShortcuts(bool bState)
+{
     Q_UNUSED(bState)
 }
 
-void XStackView::_headerClicked(qint32 nColumn) {
+void XStackView::_headerClicked(qint32 nColumn)
+{
     if (nColumn == COLUMN_ADDRESS) {
         if (getAddressMode() == MODE_ADDRESS) {
             setColumnTitle(COLUMN_ADDRESS, tr("Offset"));
@@ -383,13 +402,15 @@ void XStackView::_headerClicked(qint32 nColumn) {
     }
 }
 
-void XStackView::_cellDoubleClicked(qint32 nRow, qint32 nColumn) {
+void XStackView::_cellDoubleClicked(qint32 nRow, qint32 nColumn)
+{
     Q_UNUSED(nRow)
     Q_UNUSED(nColumn)
     // TODO Edit
 }
 
-qint64 XStackView::getRecordSize(qint64 nOffset) {
+qint64 XStackView::getRecordSize(qint64 nOffset)
+{
     Q_UNUSED(nOffset)
 
     return g_nBytesProLine;

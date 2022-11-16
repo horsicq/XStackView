@@ -22,7 +22,8 @@
 
 #include "ui_xstackviewoptionswidget.h"
 
-XStackViewOptionsWidget::XStackViewOptionsWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::XStackViewOptionsWidget) {
+XStackViewOptionsWidget::XStackViewOptionsWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::XStackViewOptionsWidget)
+{
     ui->setupUi(this);
 
     g_pOptions = nullptr;
@@ -30,27 +31,32 @@ XStackViewOptionsWidget::XStackViewOptionsWidget(QWidget *pParent) : QWidget(pPa
     setProperty("GROUPID", XOptions::GROUPID_STACK);
 }
 
-XStackViewOptionsWidget::~XStackViewOptionsWidget() {
+XStackViewOptionsWidget::~XStackViewOptionsWidget()
+{
     delete ui;
 }
 
-void XStackViewOptionsWidget::setOptions(XOptions *pOptions) {
+void XStackViewOptionsWidget::setOptions(XOptions *pOptions)
+{
     g_pOptions = pOptions;
 
     reload();
 }
 
-void XStackViewOptionsWidget::save() {
+void XStackViewOptionsWidget::save()
+{
     g_pOptions->getLineEdit(ui->lineEditStackFont, XOptions::ID_STACK_FONT);
     g_pOptions->getCheckBox(ui->checkBoxStackAddressColon, XOptions::ID_STACK_ADDRESSCOLON);
 }
 
-void XStackViewOptionsWidget::reload() {
+void XStackViewOptionsWidget::reload()
+{
     g_pOptions->setLineEdit(ui->lineEditStackFont, XOptions::ID_STACK_FONT);
     g_pOptions->setCheckBox(ui->checkBoxStackAddressColon, XOptions::ID_STACK_ADDRESSCOLON);
 }
 
-void XStackViewOptionsWidget::setDefaultValues(XOptions *pOptions) {
+void XStackViewOptionsWidget::setDefaultValues(XOptions *pOptions)
+{
 #ifdef Q_OS_WIN
     pOptions->addID(XOptions::ID_STACK_FONT, "Courier,10,-1,5,50,0,0,0,0,0");
 #endif
@@ -63,6 +69,7 @@ void XStackViewOptionsWidget::setDefaultValues(XOptions *pOptions) {
     pOptions->addID(XOptions::ID_STACK_ADDRESSCOLON, true);
 }
 
-void XStackViewOptionsWidget::on_toolButtonStackFont_clicked() {
+void XStackViewOptionsWidget::on_toolButtonStackFont_clicked()
+{
     XOptions::handleFontButton(this, ui->lineEditStackFont);
 }
