@@ -22,7 +22,8 @@
 
 #include "ui_xstackviewoptionswidget.h"
 
-XStackViewOptionsWidget::XStackViewOptionsWidget(QWidget *pParent) : QWidget(pParent), ui(new Ui::XStackViewOptionsWidget)
+XStackViewOptionsWidget::XStackViewOptionsWidget(QWidget *pParent)
+    : QWidget(pParent), ui(new Ui::XStackViewOptionsWidget)
 {
     ui->setupUi(this);
 

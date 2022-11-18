@@ -20,7 +20,8 @@
  */
 #include "xstackview.h"
 
-XStackView::XStackView(QWidget *pParent) : XDeviceTableEditView(pParent)
+XStackView::XStackView(QWidget *pParent)
+    : XDeviceTableEditView(pParent)
 {
     // TODO Check
     if (sizeof(void *) == 8) {
