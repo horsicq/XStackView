@@ -1,4 +1,4 @@
-/* Copyright (c) 2021-2022 hors<horsicq@gmail.com>
+/* Copyright (c) 2021-2023 hors<horsicq@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -59,9 +59,9 @@ void XStackView::setData(QIODevice *pDevice, OPTIONS options, bool bReload)
 
     adjustColumns();
 
-    qint64 nTotalLineCount = getDataSize() / g_nBytesProLine;
+    qint64 nTotalLineCount = getViewSize() / g_nBytesProLine;
 
-    if (getDataSize() % g_nBytesProLine == 0) {
+    if (getViewSize() % g_nBytesProLine == 0) {
         nTotalLineCount--;
     }
 
@@ -85,12 +85,12 @@ void XStackView::setData(QIODevice *pDevice, OPTIONS options, bool bReload)
 
 void XStackView::goToAddress(qint64 nAddress)
 {
-    _goToOffset(nAddress - g_options.nStartAddress);
+    _goToViewOffset(nAddress - g_options.nStartAddress);
 }
 
 void XStackView::goToOffset(qint64 nOffset)
 {
-    _goToOffset(nOffset);
+    _goToViewOffset(nOffset);
 }
 
 void XStackView::setSelectionAddress(qint64 nAddress)
@@ -169,12 +169,12 @@ XAbstractTableView::OS XStackView::cursorPositionToOS(CURSOR_POSITION cursorPosi
 {
     OS osResult = {};
 
-    osResult.nOffset = -1;
+    osResult.nViewOffset = -1;
 
     if ((cursorPosition.bIsValid) && (cursorPosition.ptype == PT_CELL)) {
-        qint64 nBlockOffset = getViewStart() + (cursorPosition.nRow * g_nBytesProLine);
+        qint64 nBlockOffset = getViewOffsetStart() + (cursorPosition.nRow * g_nBytesProLine);
 
-        osResult.nOffset = nBlockOffset;
+        osResult.nViewOffset = nBlockOffset;
         osResult.nSize = g_nBytesProLine;
     }
 
@@ -190,7 +190,7 @@ void XStackView::updateData()
             setMemoryReplaces(listMR);
         }
 
-        qint64 nBlockOffset = getViewStart();
+        qint64 nBlockOffset = getViewOffsetStart();
         // Update cursor position
         //        qint64 nCursorOffset=nBlockOffset;
 
@@ -271,7 +271,7 @@ void XStackView::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint
 
     qint32 nNumberOfRows = g_listRecords.count();
 
-    qint64 nCursorOffset = getState().nCursorOffset;
+    qint64 nCursorOffset = getState().nCursorViewOffset;
 
     if (nRow < nNumberOfRows) {
         qint64 nOffset = g_listRecords.at(nRow).nOffset;
@@ -279,7 +279,7 @@ void XStackView::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint
 
         // TODO replaced !!!
         TEXT_OPTION textOption = {};
-        textOption.bSelected = isOffsetSelected(nOffset);
+        textOption.bSelected = isViewOffsetSelected(nOffset);
         textOption.bCurrentSP = ((g_nCurrentStackPointer != -1) && (nAddress == g_nCurrentStackPointer) && (nColumn == COLUMN_ADDRESS));
         textOption.bCursor = (nOffset == nCursorOffset) && (nColumn == COLUMN_VALUE);
         //        textOption.bIsReplaced=((g_listRecords.at(nRow).bIsReplaced)&&(nColumn==COLUMN_ADDRESS));
@@ -313,11 +313,11 @@ qint64 XStackView::getScrollValue()
 
     qint64 nMaxValue = getMaxScrollValue() * g_nBytesProLine;
 
-    if (getDataSize() > nMaxValue) {
+    if (getViewSize() > nMaxValue) {
         if (nValue == getMaxScrollValue()) {
-            nResult = getDataSize() - g_nBytesProLine;
+            nResult = getViewSize() - g_nBytesProLine;
         } else {
-            nResult = ((double)nValue / (double)getMaxScrollValue()) * getDataSize();
+            nResult = ((double)nValue / (double)getMaxScrollValue()) * getViewSize();
         }
     } else {
         nResult = (qint64)nValue * g_nBytesProLine;
@@ -328,15 +328,15 @@ qint64 XStackView::getScrollValue()
 
 void XStackView::setScrollValue(qint64 nOffset)
 {
-    setViewStart(nOffset);
+    setViewOffsetStart(nOffset);
 
     qint32 nValue = 0;
 
-    if (getDataSize() > (getMaxScrollValue() * g_nBytesProLine)) {
-        if (nOffset == getDataSize() - g_nBytesProLine) {
+    if (getViewSize() > (getMaxScrollValue() * g_nBytesProLine)) {
+        if (nOffset == getViewSize() - g_nBytesProLine) {
             nValue = getMaxScrollValue();
         } else {
-            nValue = ((double)(nOffset) / ((double)getDataSize())) * (double)getMaxScrollValue();
+            nValue = ((double)(nOffset) / ((double)getViewSize())) * (double)getMaxScrollValue();
         }
     } else {
         nValue = (nOffset) / g_nBytesProLine;
