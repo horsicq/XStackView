@@ -184,12 +184,6 @@ XAbstractTableView::OS XStackView::cursorPositionToOS(CURSOR_POSITION cursorPosi
 void XStackView::updateData()
 {
     if (getDevice()) {
-        if (getXInfoDB()) {
-            QList<XBinary::MEMORY_REPLACE> listMR = getXInfoDB()->getMemoryReplaces(getMemoryMap()->nModuleAddress, getMemoryMap()->nImageSize);
-
-            setMemoryReplaces(listMR);
-        }
-
         qint64 nBlockOffset = getViewOffsetStart();
         // Update cursor position
         //        qint64 nCursorOffset=nBlockOffset;
