@@ -57,11 +57,12 @@ void XStackView::setData(QIODevice *pDevice, OPTIONS options, bool bReload)
 
 //    resetCursorData();
 
+    adjustViewSize();
     adjustColumns();
 
-    qint64 nTotalLineCount = getViewSize() / g_nBytesProLine;
+    qint64 nTotalLineCount = getDevice()->size() / g_nBytesProLine;
 
-    if (getViewSize() % g_nBytesProLine == 0) {
+    if (getDevice()->size() % g_nBytesProLine == 0) {
         nTotalLineCount--;
     }
 
@@ -408,4 +409,36 @@ qint64 XStackView::getRecordSize(qint64 nOffset)
     Q_UNUSED(nOffset)
 
     return g_nBytesProLine;
+}
+
+void XStackView::adjustViewSize()
+{
+    //    setViewSize(getDevice()->size()/sizeof(void *));
+}
+
+qint64 XStackView::getCurrentLineFromScroll()
+{
+    qint64 nResult = 0;
+
+    qint32 nValue = verticalScrollBar()->value();
+
+    nResult = (qint64)nValue * g_nBytesProLine;
+
+    return nResult;
+}
+
+void XStackView::setCurrentViewOffsetToScroll(qint64 nOffset)
+{
+    setViewOffsetStart(nOffset);
+
+    qint32 nValue = (nOffset) / g_nBytesProLine;
+
+    {
+        const bool bBlocked1 = verticalScrollBar()->blockSignals(true);
+
+        verticalScrollBar()->setValue(nValue);
+        _verticalScroll();
+
+        verticalScrollBar()->blockSignals(bBlocked1);
+    }
 }
