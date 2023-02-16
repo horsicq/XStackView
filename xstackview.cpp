@@ -55,7 +55,7 @@ void XStackView::setData(QIODevice *pDevice, OPTIONS options, bool bReload)
 
     setMemoryMap(memoryMap);
 
-    resetCursorData();
+//    resetCursorData();
 
     adjustColumns();
 
@@ -136,7 +136,7 @@ void XStackView::drawText(QPainter *pPainter, qint32 nLeft, qint32 nTop, qint32 
 
     bool bSave = false;
 
-    if ((pTextOption->bCursor) || (pTextOption->bCurrentSP)) {
+    if (pTextOption->bCurrentSP) {
         bSave = true;
     }
 
@@ -144,13 +144,13 @@ void XStackView::drawText(QPainter *pPainter, qint32 nLeft, qint32 nTop, qint32 
         pPainter->save();
     }
 
-    if ((pTextOption->bSelected) && (!pTextOption->bCursor) && (!pTextOption->bCurrentSP)) {
+    if ((pTextOption->bSelected) && (!pTextOption->bCurrentSP)) {
         pPainter->fillRect(nLeft, nTop, nWidth, nHeight, viewport()->palette().color(QPalette::Highlight));
     }
 
     if (pTextOption->bIsReplaced) {
         pPainter->fillRect(nLeft, nTop, nWidth, nHeight, QColor(Qt::red));
-    } else if ((pTextOption->bCursor) || (pTextOption->bCurrentSP)) {
+    } else if (pTextOption->bCurrentSP) {
         pPainter->fillRect(nLeft, nTop, nWidth, nHeight, viewport()->palette().color(QPalette::WindowText));
         pPainter->setPen(viewport()->palette().color(QPalette::Base));
     }
@@ -265,7 +265,7 @@ void XStackView::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint
 
     qint32 nNumberOfRows = g_listRecords.count();
 
-    qint64 nCursorOffset = getState().nCursorViewOffset;
+//    qint64 nCursorOffset = getState().nSelectionViewOffset;
 
     if (nRow < nNumberOfRows) {
         qint64 nOffset = g_listRecords.at(nRow).nOffset;
@@ -275,7 +275,7 @@ void XStackView::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint
         TEXT_OPTION textOption = {};
         textOption.bSelected = isViewOffsetSelected(nOffset);
         textOption.bCurrentSP = ((g_nCurrentStackPointer != -1) && (nAddress == g_nCurrentStackPointer) && (nColumn == COLUMN_ADDRESS));
-        textOption.bCursor = (nOffset == nCursorOffset) && (nColumn == COLUMN_VALUE);
+//        textOption.bCursor = (nOffset == nCursorOffset) && (nColumn == COLUMN_VALUE);
         //        textOption.bIsReplaced=((g_listRecords.at(nRow).bIsReplaced)&&(nColumn==COLUMN_ADDRESS));
 
         if (nColumn == COLUMN_ADDRESS) {
