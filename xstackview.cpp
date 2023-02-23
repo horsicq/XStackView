@@ -55,7 +55,7 @@ void XStackView::setData(QIODevice *pDevice, OPTIONS options, bool bReload)
 
     setMemoryMap(memoryMap);
 
-//    resetCursorData();
+    //    resetCursorData();
 
     adjustViewSize();
     adjustColumns();
@@ -266,7 +266,7 @@ void XStackView::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint
 
     qint32 nNumberOfRows = g_listRecords.count();
 
-//    qint64 nCursorOffset = getState().nSelectionViewOffset;
+    //    qint64 nCursorOffset = getState().nSelectionViewOffset;
 
     if (nRow < nNumberOfRows) {
         qint64 nOffset = g_listRecords.at(nRow).nOffset;
@@ -276,7 +276,7 @@ void XStackView::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint
         TEXT_OPTION textOption = {};
         textOption.bSelected = isViewOffsetSelected(nOffset);
         textOption.bCurrentSP = ((g_nCurrentStackPointer != -1) && (nAddress == g_nCurrentStackPointer) && (nColumn == COLUMN_ADDRESS));
-//        textOption.bCursor = (nOffset == nCursorOffset) && (nColumn == COLUMN_VALUE);
+        //        textOption.bCursor = (nOffset == nCursorOffset) && (nColumn == COLUMN_VALUE);
         //        textOption.bIsReplaced=((g_listRecords.at(nRow).bIsReplaced)&&(nColumn==COLUMN_ADDRESS));
 
         if (nColumn == COLUMN_ADDRESS) {

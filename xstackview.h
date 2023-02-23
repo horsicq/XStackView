@@ -65,7 +65,7 @@ private:
     struct TEXT_OPTION {
         bool bSelected;
         bool bCurrentSP;
-//        bool bCursor;
+        //        bool bCursor;
         bool bIsReplaced;
     };
 
