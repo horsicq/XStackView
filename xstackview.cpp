@@ -395,6 +395,8 @@ void XStackView::_headerClicked(qint32 nColumn)
 
         adjust(true);
     }
+
+    XAbstractTableView::_headerClicked(nColumn);
 }
 
 void XStackView::_cellDoubleClicked(qint32 nRow, qint32 nColumn)
