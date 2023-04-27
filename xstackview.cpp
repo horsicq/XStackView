@@ -66,7 +66,7 @@ void XStackView::setData(QIODevice *pDevice, OPTIONS options, bool bReload)
         nTotalLineCount--;
     }
 
-    setTotalLineCount(nTotalLineCount);
+    setTotalScrollCount(nTotalLineCount);
 
     if (options.nCurrentAddress) {
         goToAddress(options.nCurrentAddress);
