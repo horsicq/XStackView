@@ -300,46 +300,15 @@ void XStackView::keyPressEvent(QKeyEvent *pEvent)
     XAbstractTableView::keyPressEvent(pEvent);
 }
 
-qint64 XStackView::getScrollValue()
+qint64 XStackView::getCurrentViewOffsetFromScroll()
 {
     qint64 nResult = 0;
 
     qint32 nValue = verticalScrollBar()->value();
 
-    qint64 nMaxValue = getMaxScrollValue() * g_nBytesProLine;
-
-    if (getViewSize() > nMaxValue) {
-        if (nValue == getMaxScrollValue()) {
-            nResult = getViewSize() - g_nBytesProLine;
-        } else {
-            nResult = ((double)nValue / (double)getMaxScrollValue()) * getViewSize();
-        }
-    } else {
-        nResult = (qint64)nValue * g_nBytesProLine;
-    }
+    nResult = (qint64)nValue * g_nBytesProLine;
 
     return nResult;
-}
-
-void XStackView::setScrollValue(qint64 nOffset)
-{
-    setViewOffsetStart(nOffset);
-
-    qint32 nValue = 0;
-
-    if (getViewSize() > (getMaxScrollValue() * g_nBytesProLine)) {
-        if (nOffset == getViewSize() - g_nBytesProLine) {
-            nValue = getMaxScrollValue();
-        } else {
-            nValue = ((double)(nOffset) / ((double)getViewSize())) * (double)getMaxScrollValue();
-        }
-    } else {
-        nValue = (nOffset) / g_nBytesProLine;
-    }
-
-    verticalScrollBar()->setValue(nValue);
-
-    // adjust(true);
 }
 
 void XStackView::adjustColumns()
@@ -416,17 +385,6 @@ qint64 XStackView::getRecordSize(qint64 nOffset)
 void XStackView::adjustViewSize()
 {
     //    setViewSize(getDevice()->size()/sizeof(void *));
-}
-
-qint64 XStackView::getCurrentLineFromScroll()
-{
-    qint64 nResult = 0;
-
-    qint32 nValue = verticalScrollBar()->value();
-
-    nResult = (qint64)nValue * g_nBytesProLine;
-
-    return nResult;
 }
 
 void XStackView::setCurrentViewOffsetToScroll(qint64 nOffset)
