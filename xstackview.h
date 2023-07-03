@@ -57,7 +57,7 @@ private:
     struct RECORD {
         qint64 nOffset;
         QString sAddress;
-        qint64 nAddress;
+        XADDR nAddress;
         QString sValue;
         QString sComment;
     };

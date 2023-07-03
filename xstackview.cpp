@@ -222,7 +222,7 @@ void XStackView::updateData()
                 record.nOffset = i + nBlockOffset;
                 record.nAddress = i + g_options.nStartAddress + nBlockOffset;
 
-                qint64 nCurrentAddress = 0;
+                XADDR nCurrentAddress = 0;
 
                 if (getAddressMode() == MODE_ADDRESS) {
                     nCurrentAddress = record.nAddress;
@@ -265,12 +265,12 @@ void XStackView::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint
 
     if (nRow < nNumberOfRows) {
         qint64 nOffset = g_listRecords.at(nRow).nOffset;
-        qint64 nAddress = g_listRecords.at(nRow).nAddress;
+        XADDR nAddress = g_listRecords.at(nRow).nAddress;
 
         // TODO replaced !!!
         TEXT_OPTION textOption = {};
         textOption.bSelected = isViewOffsetSelected(nOffset);
-        textOption.bCurrentSP = ((g_nCurrentStackPointer != -1) && (nAddress == g_nCurrentStackPointer) && (nColumn == COLUMN_ADDRESS));
+        textOption.bCurrentSP = ((g_nCurrentStackPointer != (XADDR)-1) && (nAddress == g_nCurrentStackPointer) && (nColumn == COLUMN_ADDRESS));
         //        textOption.bCursor = (nOffset == nCursorOffset) && (nColumn == COLUMN_VALUE);
         //        textOption.bIsReplaced=((g_listRecords.at(nRow).bIsReplaced)&&(nColumn==COLUMN_ADDRESS));
 
