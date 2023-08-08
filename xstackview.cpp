@@ -224,9 +224,9 @@ void XStackView::updateData()
 
                 XADDR nCurrentAddress = 0;
 
-                if (getAddressMode() == MODE_ADDRESS) {
+                if (getAddressMode() == LOCMODE_ADDRESS) {
                     nCurrentAddress = record.nAddress;
-                } else if (getAddressMode() == MODE_OFFSET) {
+                } else if (getAddressMode() == LOCMODE_OFFSET) {
                     nCurrentAddress = i + nBlockOffset;
                 }
 
@@ -330,12 +330,12 @@ void XStackView::registerShortcuts(bool bState)
 void XStackView::_headerClicked(qint32 nColumn)
 {
     if (nColumn == COLUMN_ADDRESS) {
-        if (getAddressMode() == MODE_ADDRESS) {
+        if (getAddressMode() == LOCMODE_ADDRESS) {
             setColumnTitle(COLUMN_ADDRESS, tr("Offset"));
-            setAddressMode(MODE_OFFSET);
-        } else if (getAddressMode() == MODE_OFFSET) {
+            setAddressMode(LOCMODE_OFFSET);
+        } else if (getAddressMode() == LOCMODE_OFFSET) {
             setColumnTitle(COLUMN_ADDRESS, tr("Address"));
-            setAddressMode(MODE_ADDRESS);
+            setAddressMode(LOCMODE_ADDRESS);
         }
 
         adjust(true);
