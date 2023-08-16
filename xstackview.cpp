@@ -146,7 +146,7 @@ void XStackView::drawText(QPainter *pPainter, qint32 nLeft, qint32 nTop, qint32 
     }
 
     if ((pTextOption->bSelected) && (!pTextOption->bCurrentSP)) {
-        pPainter->fillRect(nLeft, nTop, nWidth, nHeight, viewport()->palette().color(QPalette::Highlight));
+        pPainter->fillRect(nLeft, nTop, nWidth, nHeight, getColor(TCLOLOR_SELECTED));
     }
 
     if (pTextOption->bIsReplaced) {
