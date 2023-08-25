@@ -44,7 +44,7 @@ XStackView::XStackView(QWidget *pParent) : XDeviceTableEditView(pParent)
     setTextFont(getMonoFont(10));
 }
 
-void XStackView::setData(QIODevice *pDevice, OPTIONS options, bool bReload)
+void XStackView::setData(QIODevice *pDevice, const OPTIONS &options, bool bReload)
 {
     g_options = options;
 
