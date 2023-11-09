@@ -92,7 +92,7 @@ protected:
     virtual void _headerClicked(qint32 nColumn);
     virtual void _cellDoubleClicked(qint32 nRow, qint32 nColumn);
     virtual qint64 getRecordSize(qint64 nOffset);
-    virtual void adjustViewSize();
+    virtual void adjustScrollCount();
 
 private:
     qint32 g_nBytesProLine;

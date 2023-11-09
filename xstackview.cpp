@@ -57,16 +57,8 @@ void XStackView::setData(QIODevice *pDevice, const OPTIONS &options, bool bReloa
 
     //    resetCursorData();
 
-    adjustViewSize();
     adjustColumns();
-
-    qint64 nTotalLineCount = getDevice()->size() / g_nBytesProLine;
-
-    if (getDevice()->size() % g_nBytesProLine == 0) {
-        nTotalLineCount--;
-    }
-
-    setTotalScrollCount(nTotalLineCount);
+    adjustScrollCount();
 
     if (options.nCurrentAddress) {
         goToAddress(options.nCurrentAddress);
@@ -377,9 +369,16 @@ qint64 XStackView::getRecordSize(qint64 nOffset)
     return g_nBytesProLine;
 }
 
-void XStackView::adjustViewSize()
+void XStackView::adjustScrollCount()
 {
-    //    setViewSize(getDevice()->size()/sizeof(void *));
+    setViewSize(getDevice()->size());
+    qint64 nTotalLineCount = getDevice()->size() / g_nBytesProLine;
+
+    if (getDevice()->size() % g_nBytesProLine == 0) {
+        nTotalLineCount--;
+    }
+
+    setTotalScrollCount(nTotalLineCount);
 }
 
 void XStackView::setCurrentViewOffsetToScroll(qint64 nOffset)
