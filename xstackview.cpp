@@ -230,7 +230,13 @@ void XStackView::updateData()
 
                 quint64 nValue = XBinary::_read_value(mode, pData + i);
 
-                record.sComment = XInfoDB::recordInfoToString(getXInfoDB()->getRecordInfoCache(nValue), riType);
+                QString sComment = XInfoDB::recordInfoToString(getXInfoDB()->getRecordInfoCache(nValue), riType);
+
+                if (getXInfoDB()->isFunctionReturnAddress(nValue)) {
+                    //record.sComment = QString("%1: %2").arg(tr("Return from"), sComment); // TODO
+                } else {
+                    record.sComment = sComment;
+                }
 
                 record.sValue = XBinary::valueToHex(mode, nValue);
 
