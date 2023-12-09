@@ -233,7 +233,7 @@ void XStackView::updateData()
                 QString sComment = XInfoDB::recordInfoToString(getXInfoDB()->getRecordInfoCache(nValue), riType);
 
                 if (getXInfoDB()->isFunctionReturnAddress(nValue)) {
-                    //record.sComment = QString("%1: %2").arg(tr("Return from"), sComment); // TODO
+                    // record.sComment = QString("%1: %2").arg(tr("Return from"), sComment); // TODO
                 } else {
                     record.sComment = sComment;
                 }
