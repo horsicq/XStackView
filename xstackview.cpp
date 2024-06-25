@@ -41,7 +41,7 @@ XStackView::XStackView(QWidget *pParent) : XDeviceTableEditView(pParent)
 
     //    setLastColumnStretch(true);
 
-    setTextFont(getMonoFont(10));
+    setTextFont(XOptions::getMonoFont(10));
 }
 
 void XStackView::setData(QIODevice *pDevice, const OPTIONS &options, bool bReload)
