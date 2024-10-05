@@ -78,12 +78,12 @@ void XStackView::setData(QIODevice *pDevice, const OPTIONS &options, bool bReloa
 
 void XStackView::goToAddress(qint64 nAddress)
 {
-    _goToViewOffset(nAddress - g_options.nStartAddress);
+    _goToViewPos(nAddress - g_options.nStartAddress);
 }
 
 void XStackView::goToOffset(qint64 nOffset)
 {
-    _goToViewOffset(nOffset);
+    _goToViewPos(nOffset);
 }
 
 void XStackView::setSelectionAddress(qint64 nAddress)
@@ -101,7 +101,7 @@ void XStackView::_adjustView()
     }
     // mb TODO errorString signal if invalid font
     // TODO Check
-    g_bIsAddressColon = getGlobalOptions()->getValue(XOptions::ID_STACK_ADDRESSCOLON).toBool();
+    g_bIsAddressColon = getGlobalOptions()->getValue(XOptions::ID_STACK_LOCATIONCOLON).toBool();
 }
 
 void XStackView::adjustView()
@@ -162,12 +162,12 @@ XAbstractTableView::OS XStackView::cursorPositionToOS(CURSOR_POSITION cursorPosi
 {
     OS osResult = {};
 
-    osResult.nViewOffset = -1;
+    osResult.nViewPos = -1;
 
     if ((cursorPosition.bIsValid) && (cursorPosition.ptype == PT_CELL)) {
-        qint64 nBlockOffset = getViewOffsetStart() + (cursorPosition.nRow * g_nBytesProLine);
+        qint64 nBlockOffset = getViewPosStart() + (cursorPosition.nRow * g_nBytesProLine);
 
-        osResult.nViewOffset = nBlockOffset;
+        osResult.nViewPos = nBlockOffset;
         osResult.nSize = g_nBytesProLine;
     }
 
@@ -177,7 +177,7 @@ XAbstractTableView::OS XStackView::cursorPositionToOS(CURSOR_POSITION cursorPosi
 void XStackView::updateData()
 {
     if (getDevice()) {
-        qint64 nBlockOffset = getViewOffsetStart();
+        qint64 nBlockOffset = getViewPosStart();
         // Update cursor position
         //        qint64 nCursorOffset=nBlockOffset;
 
@@ -216,9 +216,9 @@ void XStackView::updateData()
 
                 XADDR nCurrentAddress = 0;
 
-                if (getAddressMode() == LOCMODE_ADDRESS) {
+                if (getlocationMode() == LOCMODE_ADDRESS) {
                     nCurrentAddress = record.nAddress;
-                } else if (getAddressMode() == LOCMODE_OFFSET) {
+                } else if (getlocationMode() == LOCMODE_OFFSET) {
                     nCurrentAddress = i + nBlockOffset;
                 }
 
@@ -267,7 +267,7 @@ void XStackView::paintCell(QPainter *pPainter, qint32 nRow, qint32 nColumn, qint
 
         // TODO replaced !!!
         TEXT_OPTION textOption = {};
-        textOption.bSelected = isViewOffsetSelected(nOffset);
+        textOption.bSelected = isViewPosSelected(nOffset);
         textOption.bCurrentSP = ((g_nCurrentStackPointer != (XADDR)-1) && (nAddress == g_nCurrentStackPointer) && (nColumn == COLUMN_ADDRESS));
         //        textOption.bCursor = (nOffset == nCursorOffset) && (nColumn == COLUMN_VALUE);
         //        textOption.bIsReplaced=((g_listRecords.at(nRow).bIsReplaced)&&(nColumn==COLUMN_ADDRESS));
@@ -293,7 +293,7 @@ void XStackView::keyPressEvent(QKeyEvent *pEvent)
     XAbstractTableView::keyPressEvent(pEvent);
 }
 
-qint64 XStackView::getCurrentViewOffsetFromScroll()
+qint64 XStackView::getCurrentViewPosFromScroll()
 {
     qint64 nResult = 0;
 
@@ -328,12 +328,12 @@ void XStackView::registerShortcuts(bool bState)
 void XStackView::_headerClicked(qint32 nColumn)
 {
     if (nColumn == COLUMN_ADDRESS) {
-        if (getAddressMode() == LOCMODE_ADDRESS) {
+        if (getlocationMode() == LOCMODE_ADDRESS) {
             setColumnTitle(COLUMN_ADDRESS, tr("Offset"));
-            setAddressMode(LOCMODE_OFFSET);
-        } else if (getAddressMode() == LOCMODE_OFFSET) {
+            setLocationMode(LOCMODE_OFFSET);
+        } else if (getlocationMode() == LOCMODE_OFFSET) {
             setColumnTitle(COLUMN_ADDRESS, tr("Address"));
-            setAddressMode(LOCMODE_ADDRESS);
+            setLocationMode(LOCMODE_ADDRESS);
         }
 
         adjust(true);
@@ -387,9 +387,9 @@ void XStackView::adjustScrollCount()
     setTotalScrollCount(nTotalLineCount);
 }
 
-void XStackView::setCurrentViewOffsetToScroll(qint64 nOffset)
+void XStackView::setCurrentViewPosToScroll(qint64 nOffset)
 {
-    setViewOffsetStart(nOffset);
+    setViewPosStart(nOffset);
 
     qint32 nValue = (nOffset) / g_nBytesProLine;
 
