@@ -48,7 +48,7 @@ void XStackView::setData(QIODevice *pDevice, const OPTIONS &options, bool bReloa
 {
     g_options = options;
 
-    setDevice(pDevice, 0 , -1);
+    setDevice(pDevice, 0, -1);
 
     // XBinary binary(pDevice, true, options.nStartAddress);
     // XBinary::_MEMORY_MAP memoryMap = binary.getMemoryMap();
