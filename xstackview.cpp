@@ -108,7 +108,7 @@ void XStackView::adjustView()
 {
     _adjustView();
 
-    if (getDevice()) {
+    if (getBinaryView()->getInData().pDevice) {
         reload(true);
     }
 }
@@ -176,7 +176,7 @@ XAbstractTableView::OS XStackView::cursorPositionToOS(CURSOR_POSITION cursorPosi
 
 void XStackView::updateData()
 {
-    if (getDevice()) {
+    if (getBinaryView()->getInData().pDevice) {
         qint64 nBlockOffset = getViewPosStart();
         // Update cursor position
         //        qint64 nCursorOffset=nBlockOffset;
@@ -377,10 +377,10 @@ qint64 XStackView::getRecordSize(qint64 nOffset)
 
 void XStackView::adjustScrollCount()
 {
-    setViewSize(getDevice()->size());
-    qint64 nTotalLineCount = getDevice()->size() / g_nBytesProLine;
+    setViewSize(getBinaryView()->getInData().pDevice->size());
+    qint64 nTotalLineCount = getBinaryView()->getInData().pDevice->size() / g_nBytesProLine;
 
-    if (getDevice()->size() % g_nBytesProLine == 0) {
+    if (getBinaryView()->getInData().pDevice->size() % g_nBytesProLine == 0) {
         nTotalLineCount--;
     }
 
